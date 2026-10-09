@@ -169,3 +169,5 @@ class CallResult(Base):
     follow_up_note: Mapped[str | None] = mapped_column(Text)
     evidence_turn_id: Mapped[int | None] = mapped_column(ForeignKey("call_turns.id"))
     created_at: Mapped[datetime] = mapped_column(UTCDateTime(), default=utc_now)
+    package_approved_at: Mapped[datetime | None] = mapped_column(UTCDateTime())
+    package_approved_by: Mapped[str | None] = mapped_column(String(100))

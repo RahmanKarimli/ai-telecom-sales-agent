@@ -1,10 +1,10 @@
-# Telecom Offer Advisor — backend
+# TelsyAİ — AI telecom offer advisor
 
-Phases 1–5 of the hackathon plan: a Python 3.12 FastAPI backend with SQLAlchemy/SQLite,
+An integrated React/TypeScript dashboard and Python 3.12 FastAPI backend with SQLAlchemy/SQLite,
 shared API contracts, a fictional catalog and customer histories, explainable rule-based
 recommendations, employee approval, voice and typed AI conversations, saved outcomes,
 temporary speech caching, dashboard estimates, and Render deployment configuration.
-No testing code or test dependencies are included.
+Backend and microphone regression checks are included.
 
 ## Run locally
 
@@ -13,10 +13,12 @@ From this repository's root:
 ```sh
 cp .env.example .env
 uv sync --locked
+npm --prefix frontend ci
+npm --prefix frontend run build
 uv run python -m backend
 ```
 
-Open [the backend shell](http://127.0.0.1:8000),
+Open [the integrated dashboard](http://127.0.0.1:8000),
 [Swagger API contracts](http://127.0.0.1:8000/api/docs), or
 [service health](http://127.0.0.1:8000/api/health).
 Startup creates the seven tables in `data/telecom.db`. If all application tables are empty,
@@ -35,6 +37,11 @@ Without uv, create a Python 3.12 virtual environment, install `requirements.txt`
 run `python -m backend` from the repository root. The lockfile pins the full dependency
 graph; `requirements.txt` is its production-only export for the Docker image.
 
+For frontend development, keep the backend running on port 8000 and run
+`npm --prefix frontend run dev`. Open http://127.0.0.1:5173; Vite proxies `/api`
+to `127.0.0.1:8000`. The production build is served directly by FastAPI on port 8000.
+Build before starting (or restart) the backend so it mounts the frontend.
+
 ## Configuration
 
 Copy `.env.example` to `.env` and set `OPENAI_API_KEY` for live AI access. Keep keys
@@ -46,7 +53,9 @@ The shared demo gate uses `Authorization: Bearer <DEMO_ACCESS_TOKEN>`. It is opt
 locally and mandatory when `APP_ENV=production`. Swagger's **Authorize** control accepts
 the demo token. `/api/health`, the documentation, and the root shell are public;
 business endpoints require the gate when configured. `approved_by` is a display label,
-not an authenticated employee account.
+not an authenticated employee account. The frontend verifies access against the backend
+before opening the workspace; token-free development skips the gate automatically.
+Only the shared demo token is stored in browser session storage.
 
 `ai_configured` in health means a nonempty API key is configured. It does **not** mean
 model access or billing has been verified. Provider failures never switch to fake AI.
@@ -71,7 +80,9 @@ model access or billing has been verified. Provider failures never switch to fak
   and MP3 speech generation with sanitized provider errors and evidence validation.
 - `backend/main.py`: lifespan initialization, optional CORS, error format, and optional
   built frontend serving.
-- `Dockerfile` and `render.yaml`: Python container and free Render service configuration.
+- `frontend/`: supplied TelsyAİ design, live API adapters, approval/call workflow,
+  retryable typed/audio input, generated speech, and dashboard metrics.
+- `Dockerfile` and `render.yaml`: Node frontend build plus Python runtime and Render configuration.
 - `docs/openapi.json`: generated API schema for frontend development without a running server.
 - `docs/API_CONTRACT.md`: conventions, lifecycle rules, and representative payloads.
 
@@ -132,6 +143,9 @@ Consent permits discussion and never records acceptance. Initial interest asks a
 confirmation naming the package, allowances, and price. Only confirmation in that state
 records accepted interest for employee processing. Questions or objections interrupt
 confirmation and return to discussion, requiring a fresh confirmation before acceptance.
+For accepted results, the employee can approve the package request for processing from the
+call result panel. That saves the approval time and employee label; it does not activate the
+package or change billing.
 Rejection, follow-up, and employee requests can close the call at any stage.
 Permission to hear an explanation, including "Sure, please tell me what you recommend",
 advances to offer discussion without treating indirect question words as acceptance.
@@ -145,8 +159,14 @@ retry that message with its original ID, or end the call. A new message while on
 pending returns 409. Successful duplicate turns return their originally stored response,
 even after later turns; fetch call state separately to see the latest status.
 
-Calls close unresolved after ten successfully processed customer turns, five minutes
-total, two minutes idle, or manual ending. Expiry is enforced on business API reads/writes.
+Calls close unresolved at the configured message/time limits or manual ending. Defaults:
+`CALL_MAX_CUSTOMER_TURNS=50`, `CALL_SESSION_TIMEOUT_SECONDS=1800` (30 minutes), and
+`CALL_IDLE_TIMEOUT_SECONDS=600` (10 minutes). Set 10/300/120 to restore the short demo
+policy; restart the backend after changing configuration. Expiry is enforced on business
+API reads/writes. In-flight provider operations are protected from expiry; failures refresh
+the idle retry window. The workspace displays actual limits, warns near expiry, and explains
+closure. Closed chats offer **Delete chat** with confirmation, using the existing development
+reset endpoint; active chats must be ended first and production deletion remains prohibited.
 Results contain outcome, summary, next action, follow-up wording, timestamps, and customer
 evidence for confirmed decisions. End retries preserve existing outcomes. Optional
 `interrupted_assistant_turn_id` on a turn/end request marks an assistant turn in that call.
@@ -198,7 +218,7 @@ retry behavior, approval, demo access, limits, expiry, and missing-key recovery 
 Two consecutive local voice workflows completed with real STT, interpretation, MP3 speech,
 and saved acceptance. One earlier near-empty speech response led to the MP3 validation fix.
 See [Phase 5 evidence](docs/PHASE5_EVIDENCE.md) for recorded outputs, timings, and limitations.
-Hosted browser microphone/playback checks and human assessment of pronunciation remain open.
+Microphone access was verified locally; hosted browser and microphone checks remain after deployment.
 
 ## Deploy to Render
 
@@ -215,6 +235,13 @@ A hosted URL remains unverified until the Git repository and Render service are
 connected. Deployment configuration is prepared; no service has been provisioned
 by this implementation.
 
+Render supplies managed TLS certificates for its `onrender.com` URL and redirects HTTP
+traffic to HTTPS. The app uses a same-origin frontend/API path, so no browser CORS setup is
+needed for the deployed demo; the microphone works on the HTTPS origin. For a custom domain,
+add it in Render and configure the DNS records Render provides. The Blueprint trusts
+Render's forwarded headers so FastAPI sees the original HTTPS scheme. Supply a valid
+`OPENAI_API_KEY` and retain the generated `DEMO_ACCESS_TOKEN` as server-side secrets.
+
 For a local container:
 
 ```sh
@@ -224,19 +251,43 @@ docker run --rm --env-file .env -e APP_ENV=production -e HOST=0.0.0.0 -p 8000:80
 
 Set a nonempty `DEMO_ACCESS_TOKEN` in `.env` before starting the production container.
 
-## Frontend handoff and later phases
+## Frontend integration
 
-Use Vite's `/api` proxy during development, or list an explicit origin in
-`CORS_ORIGINS` as a JSON array. Use hash routing for hosting. When a built
-`frontend/dist/index.html` exists, FastAPI serves the static app after registering
-API routes. The current Docker image contains only the backend; add a Node build stage
-and copy the built frontend into the image when the frontend application exists.
+The ZIP is extracted under `frontend/`. Live FastAPI integration is the default;
+`VITE_DEMO_MODE=true` explicitly opts into the original synthetic preview. No API failure
+silently switches to preview. `VITE_API_BASE_URL=/api` uses the same origin or Vite proxy.
 
-Phases 2–5 implement data, deterministic scoring, profile/recommendation reads, approval,
-voice/typed conversations, verified response templates, persistence, upload limits,
-speech caching, dashboard aggregates, and acceptance fixes with recorded evaluation evidence.
-Hosted browser integration still depends on
-the frontend application and a provisioned Render service.
+Microphone permission and recording have separate visible states. Capture selects a
+supported browser format, sends bounded chunks at stop or after 20 seconds, and releases
+tracks on stop/cancel/navigation. Errors explain blocked permission, insecure origins,
+missing devices, or unavailable devices. The microphone flow was verified locally in a normal browser.
+
+Regression checks: `.venv/bin/python -m unittest discover -s tests -v` and
+`npm --prefix frontend run test:microphone`.
+The browser never receives the OpenAI key.
+
+`frontend/src/lib/api.ts` maps the existing API contract to the supplied view models:
+recommendation envelopes and package objects, flat customer profiles, score components,
+`call_id`, saved offer snapshots, and dashboard outcome counts. Normal requests and MP3
+fetches use `Authorization: Bearer <demo token>`. Approval and manual end send JSON bodies.
+Customer turns use multipart form data.
+
+Start retries retain their request ID. Failed/uncertain turns offer **Retry message** using
+the same ID and input; reloading a pending saved transcript restores retry using its text.
+A successful turn remains visible even if the follow-up read fails. The backend continues
+to own approval, consent, explicit confirmation, package facts, and all outcomes.
+
+Voice uses browser recording capped at 20 seconds and 2 MiB, with supported WebM/Ogg/MP4
+formats and matching upload filenames. Permission denial, pending permission, or unsupported
+recording preserves the typed fallback. Saved assistant replies request generated speech;
+if autoplay is blocked, use **Play voice**. Stop/record/send/end interrupts playback and
+reports the assistant turn to the backend. Navigating away releases microphone tracks,
+recording timers, playback, and object URLs.
+
+Hash routing preserves all four screens on reload. The Dockerfile builds React with Node 22
+and copies `frontend/dist` into the Python runtime. `/api/*` routes retain precedence over
+static assets. Render deployment is prepared; provisioning and hosted HTTPS/microphone
+verification are separate from this local integration.
 
 To refresh the committed frontend schema after changing contracts:
 

@@ -9,6 +9,9 @@ services:
         value: production
       - key: HOST
         value: 0.0.0.0
+      # Render terminates public TLS and forwards the original scheme in X-Forwarded-Proto.
+      - key: FORWARDED_ALLOW_IPS
+        value: "*"
       - key: DATABASE_URL
         value: sqlite:///./data/telecom.db
       - key: DEMO_ACCESS_TOKEN

@@ -139,6 +139,14 @@ class CallResultResponse(Contract):
     follow_up_note: str | None
     evidence_turn_id: PositiveID | None
     created_at: datetime
+    package_approved_at: datetime | None = None
+    package_approved_by: str | None = None
+
+
+class CallLimits(Contract):
+    max_customer_turns: PositiveID
+    session_timeout_seconds: PositiveID
+    idle_timeout_seconds: PositiveID
 
 
 class CallResponse(Contract):
@@ -152,6 +160,7 @@ class CallResponse(Contract):
     ended_at: datetime | None
     last_activity_at: datetime
     error_code: str | None
+    limits: CallLimits | None = None
     turns: list[CallTurnResponse]
     result: CallResultResponse | None
 

@@ -946,6 +946,145 @@
         }
       }
     },
+    "/api/calls/{call_id}/approve-package-change": {
+      "post": {
+        "tags": [
+          "Calls"
+        ],
+        "summary": "Approve Package Change",
+        "description": "Record employee approval of a customer's confirmed package interest for processing.",
+        "operationId": "approve_package_change_api_calls__call_id__approve_package_change_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "call_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "title": "Call Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CallResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unsupported Media Type"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
+          }
+        }
+      }
+    },
     "/api/calls/{call_id}/turns": {
       "post": {
         "tags": [
@@ -1435,6 +1574,33 @@
         ],
         "title": "Body_turn_api_calls__call_id__turns_post"
       },
+      "CallLimits": {
+        "properties": {
+          "max_customer_turns": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Max Customer Turns"
+          },
+          "session_timeout_seconds": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Session Timeout Seconds"
+          },
+          "idle_timeout_seconds": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Idle Timeout Seconds"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "max_customer_turns",
+          "session_timeout_seconds",
+          "idle_timeout_seconds"
+        ],
+        "title": "CallLimits"
+      },
       "CallResponse": {
         "properties": {
           "call_id": {
@@ -1493,6 +1659,16 @@
               }
             ],
             "title": "Error Code"
+          },
+          "limits": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CallLimits"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "turns": {
             "items": {
@@ -1580,6 +1756,29 @@
             "type": "string",
             "format": "date-time",
             "title": "Created At"
+          },
+          "package_approved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Package Approved At"
+          },
+          "package_approved_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Package Approved By"
           }
         },
         "additionalProperties": false,

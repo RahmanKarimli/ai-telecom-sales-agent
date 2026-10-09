@@ -3,8 +3,10 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from backend.config import Settings
 from backend.models import Call, CallResult, CallTurn, Customer, Recommendation, TelecomPackage
 from backend.schemas import (
+    CallLimits,
     CallResponse,
     CallResultResponse,
     CallTurnResponse,
@@ -59,7 +61,7 @@ def recommendation_response(
     )
 
 
-def call_response(session: Session, call: Call) -> CallResponse:
+def call_response(session: Session, call: Call, settings: Settings | None = None) -> CallResponse:
     turns = session.scalars(
         select(CallTurn).where(CallTurn.call_id == call.id).order_by(CallTurn.sequence)
     ).all()
@@ -75,6 +77,13 @@ def call_response(session: Session, call: Call) -> CallResponse:
         ended_at=call.ended_at,
         last_activity_at=call.last_activity_at,
         error_code=call.error_code,
+        limits=CallLimits(
+            max_customer_turns=settings.call_max_customer_turns,
+            session_timeout_seconds=settings.call_session_timeout_seconds,
+            idle_timeout_seconds=settings.call_idle_timeout_seconds,
+        )
+        if settings
+        else None,
         turns=[turn_response(turn) for turn in turns],
         result=CallResultResponse.model_validate(result) if result else None,
     )
