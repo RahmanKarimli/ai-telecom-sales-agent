@@ -5,7 +5,7 @@
 __pycache__/
 *.py[cod]
 .ruff_cache/
-data/
+/data/
 *.db
 *.db-shm
 *.db-wal
