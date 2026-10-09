@@ -1,3 +1,11 @@
+FROM node:22-alpine AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY frontend/ ./
+ENV VITE_DEMO_MODE=false VITE_API_BASE_URL=/api
+RUN npm run build
+
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -13,7 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && mkdir -p /app/data \
     && chown telecom:telecom /app/data
 COPY --chown=telecom:telecom backend/ ./backend/
-# A frontend build stage will be added when the React application exists.
+COPY --from=frontend-build --chown=telecom:telecom /app/frontend/dist/ ./frontend/dist/
 USER telecom
 EXPOSE 8000
 CMD ["python", "-m", "backend"]

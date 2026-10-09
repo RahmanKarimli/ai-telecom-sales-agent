@@ -31,6 +31,7 @@ voice/typed calls, assistant speech, and dashboard metrics are operational.
 | POST | `/calls/{call_id}/turns` | `TurnResponse` | 3 typed / 4 audio |
 | GET | `/calls/{call_id}/turns/{turn_id}/audio` | MP3 (`audio/mpeg`) | 4 |
 | POST | `/calls/{call_id}/end` | `CallResponse` | 3 |
+| POST | `/calls/{call_id}/approve-package-change` | `CallResponse` | 5 |
 
 ## States and outcomes
 
@@ -42,6 +43,10 @@ Calls: `active`, `completed`, `unresolved`. Conversation states:
 Results: `accepted`, `rejected`, `follow_up_requested`, `human_requested`, `unresolved`.
 The first four count as completed calls. Manual ending or expiry produces unresolved.
 Accepted means confirmed interest for employee processing. Packages and bills do not change.
+After an accepted result, an employee can record approval for processing with
+`POST /api/calls/{call_id}/approve-package-change` and `{"approved_by":"demo_employee"}`.
+The action is idempotent and saves `package_approved_at` and `package_approved_by` on the
+result. It records employee approval only; package activation and billing remain outside this demo.
 
 Turn roles are `customer` and `assistant`. The intent and fact-key allowlists are in
 OpenAPI. Customer turns use `client_turn_id`; assistant turns use null. Responses use
@@ -151,9 +156,19 @@ the exact verified amounts. Only reviewed seed FAQ sentences are paraphrased; cu
 FAQ wording is returned verbatim. Replies contain at most two selected facts for
 compound package questions.
 
-Expire calls on business API reads/writes at five minutes total or two minutes idle.
-After the tenth successfully processed customer turn, an otherwise active call closes
-unresolved. Terminal decisions on that tenth turn retain their confirmed outcome.
+Expire calls on business API reads/writes using `CALL_SESSION_TIMEOUT_SECONDS` (default
+1800, 30 minutes) and `CALL_IDLE_TIMEOUT_SECONDS` (default 600, 10 minutes). After
+`CALL_MAX_CUSTOMER_TURNS` successfully processed customer messages (default 50), an
+otherwise active call closes unresolved. Terminal decisions at the cap retain their
+confirmed outcome. Calls with an in-flight transcription or interpretation are protected
+from expiry until that operation finishes. Provider failures retain the saved message and
+refresh the idle retry window.
+
+`GET /calls/{call_id}` and manual end responses include `limits` with
+`max_customer_turns`, `session_timeout_seconds`, and `idle_timeout_seconds`, for browser
+display and warnings. Customer profile `previous_call.limits` may be null; fetch the call
+to obtain configured limits. Restore the original short demo policy with 300 seconds total,
+120 seconds idle, and 10 messages, then restart the backend.
 Manual ending/expiry has no customer decision evidence. Terminal outcomes persist
 exactly one result per call, and repeated end requests preserve it.
 
