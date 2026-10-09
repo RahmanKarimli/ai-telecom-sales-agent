@@ -1,0 +1,1643 @@
+{
+  "method": "Local HTTP voice round trips using macOS-synthesized English WAV customer utterances, real OpenAI STT/intent/TTS. No browser microphone or playback checks.",
+  "initial_rounds": [
+    {
+      "call_id": 1,
+      "recommendation_id": 1,
+      "turns": [
+        {
+          "utterance": "consent",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 2,
+              "call_id": 1,
+              "sequence": 2,
+              "role": "customer",
+              "text": "Yes, please explain the offer.",
+              "intent": "consent",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:03.453187Z",
+              "client_turn_id": "voice-1-consent"
+            },
+            "assistant_turn": {
+              "id": 3,
+              "call_id": 1,
+              "sequence": 3,
+              "role": "assistant",
+              "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 4.67 manats a month, depending on future usage; what would you like to know?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "observed_usage",
+                "estimated_savings"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:04.576950Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 2.918,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 259968,
+            "seconds": 4.137
+          }
+        },
+        {
+          "utterance": "question",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 4,
+              "call_id": 1,
+              "sequence": 4,
+              "role": "customer",
+              "text": "Yes, but does it include roaming?",
+              "intent": "package_question",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:10.462632Z",
+              "client_turn_id": "voice-1-question"
+            },
+            "assistant_turn": {
+              "id": 5,
+              "call_id": 1,
+              "sequence": 5,
+              "role": "assistant",
+              "text": "Roaming isn't included.",
+              "intent": null,
+              "fact_keys": [
+                "roaming"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:11.436618Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 2.721,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 44160,
+            "seconds": 1.446
+          }
+        },
+        {
+          "utterance": "interest",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 6,
+              "call_id": 1,
+              "sequence": 6,
+              "role": "customer",
+              "text": "I would like to take balanced.",
+              "intent": "accept_interest",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:13.682832Z",
+              "client_turn_id": "voice-1-interest"
+            },
+            "assistant_turn": {
+              "id": 7,
+              "call_id": 1,
+              "sequence": 7,
+              "role": "assistant",
+              "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:14.721021Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "awaiting_accept_confirmation",
+            "result": null
+          },
+          "processing_seconds": 1.748,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 183168,
+            "seconds": 2.111
+          }
+        },
+        {
+          "utterance": "confirm",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 8,
+              "call_id": 1,
+              "sequence": 8,
+              "role": "customer",
+              "text": "Yes, please record my interest in Balanced.",
+              "intent": "confirm_accept",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:18.084210Z",
+              "client_turn_id": "voice-1-confirm"
+            },
+            "assistant_turn": {
+              "id": 9,
+              "call_id": 1,
+              "sequence": 9,
+              "role": "assistant",
+              "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+              "intent": null,
+              "fact_keys": [
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:19.250412Z",
+              "client_turn_id": null
+            },
+            "status": "completed",
+            "conversation_state": "closed",
+            "result": {
+              "id": 1,
+              "call_id": 1,
+              "outcome": "accepted",
+              "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+              "next_action": "Employee should review confirmed interest and process the package request.",
+              "follow_up_note": null,
+              "evidence_turn_id": 8,
+              "created_at": "2026-10-09T08:49:19.252710Z"
+            }
+          },
+          "processing_seconds": 2.422,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 127488,
+            "seconds": 1.464
+          }
+        }
+      ],
+      "saved_call": {
+        "call_id": 1,
+        "customer_id": 1,
+        "recommendation_id": 1,
+        "status": "completed",
+        "conversation_state": "closed",
+        "offer_snapshot": {
+          "proposed_package": {
+            "id": 3,
+            "name": "Balanced",
+            "monthly_price_minor": 2800,
+            "currency": "AZN",
+            "data_gb": 30.0,
+            "call_minutes": 500,
+            "extra_gb_price_minor": 100,
+            "extra_minute_price_minor": 5,
+            "verified_faq": {
+              "taxes": "The listed monthly price includes fictional taxes.",
+              "contract": "There is no minimum contract.",
+              "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+              "roaming": "Roaming is excluded.",
+              "rollover": "Unused data and minutes do not roll over."
+            },
+            "active": true,
+            "version": 1
+          },
+          "evidence": {
+            "usage": [
+              {
+                "month": "2026-07-01",
+                "data_gb": 25.0,
+                "call_minutes": 180,
+                "extra_charges_minor": 1000
+              },
+              {
+                "month": "2026-08-01",
+                "data_gb": 28.0,
+                "call_minutes": 200,
+                "extra_charges_minor": 1300
+              },
+              {
+                "month": "2026-09-01",
+                "data_gb": 30.0,
+                "call_minutes": 220,
+                "extra_charges_minor": 1500
+              }
+            ],
+            "current_package": {
+              "id": 2,
+              "name": "Everyday",
+              "monthly_price_minor": 2000,
+              "currency": "AZN",
+              "data_gb": 15.0,
+              "call_minutes": 300,
+              "extra_gb_price_minor": 100,
+              "extra_minute_price_minor": 5,
+              "verified_faq": {
+                "taxes": "The listed monthly price includes fictional taxes.",
+                "contract": "There is no minimum contract.",
+                "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+                "roaming": "Roaming is excluded.",
+                "rollover": "Unused data and minutes do not roll over."
+              },
+              "active": true,
+              "version": 1
+            },
+            "peak_data_gb": 30.0,
+            "peak_call_minutes": 220,
+            "months_exceeding_allowance": 3,
+            "average_bill_minor": 3267,
+            "estimated_savings_minor": 467
+          },
+          "reason": "Your data usage exceeded your 15 GB allowance in all three months. Balanced covers your observed usage up to 30 GB and 220 minutes with 30 GB and 500 minutes. It could reduce your historical average monthly bill from 32.67 to 28.00 AZN. Future savings depend on usage.",
+          "algorithm_version": "rules-v1"
+        },
+        "started_at": "2026-10-09T08:49:01.658338Z",
+        "ended_at": "2026-10-09T08:49:19.252710Z",
+        "last_activity_at": "2026-10-09T08:49:19.252710Z",
+        "error_code": null,
+        "turns": [
+          {
+            "id": 1,
+            "call_id": 1,
+            "sequence": 1,
+            "role": "assistant",
+            "text": "Hi, I'm an AI telecom advisor, and this is a simulated call. Is now a good time to talk about a package that could suit your usage?",
+            "intent": null,
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:01.658338Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 2,
+            "call_id": 1,
+            "sequence": 2,
+            "role": "customer",
+            "text": "Yes, please explain the offer.",
+            "intent": "consent",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:03.453187Z",
+            "client_turn_id": "voice-1-consent"
+          },
+          {
+            "id": 3,
+            "call_id": 1,
+            "sequence": 3,
+            "role": "assistant",
+            "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 4.67 manats a month, depending on future usage; what would you like to know?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "observed_usage",
+              "estimated_savings"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:04.576950Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 4,
+            "call_id": 1,
+            "sequence": 4,
+            "role": "customer",
+            "text": "Yes, but does it include roaming?",
+            "intent": "package_question",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:10.462632Z",
+            "client_turn_id": "voice-1-question"
+          },
+          {
+            "id": 5,
+            "call_id": 1,
+            "sequence": 5,
+            "role": "assistant",
+            "text": "Roaming isn't included.",
+            "intent": null,
+            "fact_keys": [
+              "roaming"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:11.436618Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 6,
+            "call_id": 1,
+            "sequence": 6,
+            "role": "customer",
+            "text": "I would like to take balanced.",
+            "intent": "accept_interest",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:13.682832Z",
+            "client_turn_id": "voice-1-interest"
+          },
+          {
+            "id": 7,
+            "call_id": 1,
+            "sequence": 7,
+            "role": "assistant",
+            "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:14.721021Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 8,
+            "call_id": 1,
+            "sequence": 8,
+            "role": "customer",
+            "text": "Yes, please record my interest in Balanced.",
+            "intent": "confirm_accept",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:18.084210Z",
+            "client_turn_id": "voice-1-confirm"
+          },
+          {
+            "id": 9,
+            "call_id": 1,
+            "sequence": 9,
+            "role": "assistant",
+            "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+            "intent": null,
+            "fact_keys": [
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:19.250412Z",
+            "client_turn_id": null
+          }
+        ],
+        "result": {
+          "id": 1,
+          "call_id": 1,
+          "outcome": "accepted",
+          "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+          "next_action": "Employee should review confirmed interest and process the package request.",
+          "follow_up_note": null,
+          "evidence_turn_id": 8,
+          "created_at": "2026-10-09T08:49:19.252710Z"
+        }
+      }
+    },
+    {
+      "call_id": 2,
+      "recommendation_id": 3,
+      "turns": [
+        {
+          "utterance": "consent",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 11,
+              "call_id": 2,
+              "sequence": 2,
+              "role": "customer",
+              "text": "Yes, please explain the offer.",
+              "intent": "consent",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:21.717536Z",
+              "client_turn_id": "voice-2-consent"
+            },
+            "assistant_turn": {
+              "id": 12,
+              "call_id": 2,
+              "sequence": 3,
+              "role": "assistant",
+              "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 2 manats a month, depending on future usage; what would you like to know?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "observed_usage",
+                "estimated_savings"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:22.716394Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 1.973,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 240000,
+            "seconds": 2.511
+          }
+        },
+        {
+          "utterance": "question",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 13,
+              "call_id": 2,
+              "sequence": 4,
+              "role": "customer",
+              "text": "Yes, but does it include roaming?",
+              "intent": "package_question",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:26.047086Z",
+              "client_turn_id": "voice-2-question"
+            },
+            "assistant_turn": {
+              "id": 14,
+              "call_id": 2,
+              "sequence": 5,
+              "role": "assistant",
+              "text": "Roaming isn't included.",
+              "intent": null,
+              "fact_keys": [
+                "roaming"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:27.252141Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 2.022,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 36096,
+            "seconds": 1.291
+          }
+        },
+        {
+          "utterance": "interest",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 15,
+              "call_id": 2,
+              "sequence": 6,
+              "role": "customer",
+              "text": "I would like to take balanced.",
+              "intent": "accept_interest",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:29.675431Z",
+              "client_turn_id": "voice-2-interest"
+            },
+            "assistant_turn": {
+              "id": 16,
+              "call_id": 2,
+              "sequence": 7,
+              "role": "assistant",
+              "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:30.736403Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "awaiting_accept_confirmation",
+            "result": null
+          },
+          "processing_seconds": 2.19,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 180864,
+            "seconds": 2.007
+          }
+        },
+        {
+          "utterance": "confirm",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 17,
+              "call_id": 2,
+              "sequence": 8,
+              "role": "customer",
+              "text": "Yes, please record my interest in balanced.",
+              "intent": "confirm_accept",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:33.455433Z",
+              "client_turn_id": "voice-2-confirm"
+            },
+            "assistant_turn": {
+              "id": 18,
+              "call_id": 2,
+              "sequence": 9,
+              "role": "assistant",
+              "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+              "intent": null,
+              "fact_keys": [
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:49:34.643010Z",
+              "client_turn_id": null
+            },
+            "status": "completed",
+            "conversation_state": "closed",
+            "result": {
+              "id": 2,
+              "call_id": 2,
+              "outcome": "accepted",
+              "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+              "next_action": "Employee should review confirmed interest and process the package request.",
+              "follow_up_note": null,
+              "evidence_turn_id": 17,
+              "created_at": "2026-10-09T08:49:34.643959Z"
+            }
+          },
+          "processing_seconds": 1.895,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 5760,
+            "seconds": 3.288
+          }
+        }
+      ],
+      "saved_call": {
+        "call_id": 2,
+        "customer_id": 3,
+        "recommendation_id": 3,
+        "status": "completed",
+        "conversation_state": "closed",
+        "offer_snapshot": {
+          "proposed_package": {
+            "id": 3,
+            "name": "Balanced",
+            "monthly_price_minor": 2800,
+            "currency": "AZN",
+            "data_gb": 30.0,
+            "call_minutes": 500,
+            "extra_gb_price_minor": 100,
+            "extra_minute_price_minor": 5,
+            "verified_faq": {
+              "taxes": "The listed monthly price includes fictional taxes.",
+              "contract": "There is no minimum contract.",
+              "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+              "roaming": "Roaming is excluded.",
+              "rollover": "Unused data and minutes do not roll over."
+            },
+            "active": true,
+            "version": 1
+          },
+          "evidence": {
+            "usage": [
+              {
+                "month": "2026-07-01",
+                "data_gb": 12.0,
+                "call_minutes": 500,
+                "extra_charges_minor": 1000
+              },
+              {
+                "month": "2026-08-01",
+                "data_gb": 14.0,
+                "call_minutes": 500,
+                "extra_charges_minor": 1000
+              },
+              {
+                "month": "2026-09-01",
+                "data_gb": 15.0,
+                "call_minutes": 500,
+                "extra_charges_minor": 1000
+              }
+            ],
+            "current_package": {
+              "id": 2,
+              "name": "Everyday",
+              "monthly_price_minor": 2000,
+              "currency": "AZN",
+              "data_gb": 15.0,
+              "call_minutes": 300,
+              "extra_gb_price_minor": 100,
+              "extra_minute_price_minor": 5,
+              "verified_faq": {
+                "taxes": "The listed monthly price includes fictional taxes.",
+                "contract": "There is no minimum contract.",
+                "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+                "roaming": "Roaming is excluded.",
+                "rollover": "Unused data and minutes do not roll over."
+              },
+              "active": true,
+              "version": 1
+            },
+            "peak_data_gb": 15.0,
+            "peak_call_minutes": 500,
+            "months_exceeding_allowance": 3,
+            "average_bill_minor": 3000,
+            "estimated_savings_minor": 200
+          },
+          "reason": "Your call usage exceeded your 300 minute allowance in all three months. Balanced covers your observed usage up to 15 GB and 500 minutes with 30 GB and 500 minutes. It could reduce your historical average monthly bill from 30.00 to 28.00 AZN. Future savings depend on usage.",
+          "algorithm_version": "rules-v1"
+        },
+        "started_at": "2026-10-09T08:49:20.745833Z",
+        "ended_at": "2026-10-09T08:49:34.643959Z",
+        "last_activity_at": "2026-10-09T08:49:34.643959Z",
+        "error_code": null,
+        "turns": [
+          {
+            "id": 10,
+            "call_id": 2,
+            "sequence": 1,
+            "role": "assistant",
+            "text": "Hi, I'm an AI telecom advisor, and this is a simulated call. Is now a good time to talk about a package that could suit your usage?",
+            "intent": null,
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:20.745833Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 11,
+            "call_id": 2,
+            "sequence": 2,
+            "role": "customer",
+            "text": "Yes, please explain the offer.",
+            "intent": "consent",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:21.717536Z",
+            "client_turn_id": "voice-2-consent"
+          },
+          {
+            "id": 12,
+            "call_id": 2,
+            "sequence": 3,
+            "role": "assistant",
+            "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 2 manats a month, depending on future usage; what would you like to know?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "observed_usage",
+              "estimated_savings"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:22.716394Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 13,
+            "call_id": 2,
+            "sequence": 4,
+            "role": "customer",
+            "text": "Yes, but does it include roaming?",
+            "intent": "package_question",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:26.047086Z",
+            "client_turn_id": "voice-2-question"
+          },
+          {
+            "id": 14,
+            "call_id": 2,
+            "sequence": 5,
+            "role": "assistant",
+            "text": "Roaming isn't included.",
+            "intent": null,
+            "fact_keys": [
+              "roaming"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:27.252141Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 15,
+            "call_id": 2,
+            "sequence": 6,
+            "role": "customer",
+            "text": "I would like to take balanced.",
+            "intent": "accept_interest",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:29.675431Z",
+            "client_turn_id": "voice-2-interest"
+          },
+          {
+            "id": 16,
+            "call_id": 2,
+            "sequence": 7,
+            "role": "assistant",
+            "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:30.736403Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 17,
+            "call_id": 2,
+            "sequence": 8,
+            "role": "customer",
+            "text": "Yes, please record my interest in balanced.",
+            "intent": "confirm_accept",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:33.455433Z",
+            "client_turn_id": "voice-2-confirm"
+          },
+          {
+            "id": 18,
+            "call_id": 2,
+            "sequence": 9,
+            "role": "assistant",
+            "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+            "intent": null,
+            "fact_keys": [
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:49:34.643010Z",
+            "client_turn_id": null
+          }
+        ],
+        "result": {
+          "id": 2,
+          "call_id": 2,
+          "outcome": "accepted",
+          "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+          "next_action": "Employee should review confirmed interest and process the package request.",
+          "follow_up_note": null,
+          "evidence_turn_id": 17,
+          "created_at": "2026-10-09T08:49:34.643959Z"
+        }
+      }
+    }
+  ],
+  "rounds": [
+    {
+      "call_id": 6,
+      "recommendation_id": 1,
+      "turns": [
+        {
+          "utterance": "consent",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 29,
+              "call_id": 6,
+              "sequence": 2,
+              "role": "customer",
+              "text": "Yes, please explain the offer.",
+              "intent": "consent",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:12.305558Z",
+              "client_turn_id": "voice-final-1-consent"
+            },
+            "assistant_turn": {
+              "id": 30,
+              "call_id": 6,
+              "sequence": 3,
+              "role": "assistant",
+              "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 4.67 manats a month, depending on future usage; what would you like to know?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "observed_usage",
+                "estimated_savings"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:13.617240Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 4.458,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 256128,
+            "seconds": 2.58,
+            "verification_transcript": "Sure. I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for $28 a month. Based on your recent bills, you could save about $4.67 a month, depending on future usage. What would you like to know?"
+          }
+        },
+        {
+          "utterance": "question",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 31,
+              "call_id": 6,
+              "sequence": 4,
+              "role": "customer",
+              "text": "Yes, but does it include roaming?",
+              "intent": "package_question",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:17.282378Z",
+              "client_turn_id": "voice-final-1-question"
+            },
+            "assistant_turn": {
+              "id": 32,
+              "call_id": 6,
+              "sequence": 5,
+              "role": "assistant",
+              "text": "Roaming isn't included.",
+              "intent": null,
+              "fact_keys": [
+                "roaming"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:18.470718Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 2.272,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 26496,
+            "seconds": 1.318,
+            "verification_transcript": "Roaming isn't included."
+          }
+        },
+        {
+          "utterance": "interest",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 33,
+              "call_id": 6,
+              "sequence": 6,
+              "role": "customer",
+              "text": "I would like to take balanced.",
+              "intent": "accept_interest",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:20.649744Z",
+              "client_turn_id": "voice-final-1-interest"
+            },
+            "assistant_turn": {
+              "id": 34,
+              "call_id": 6,
+              "sequence": 7,
+              "role": "assistant",
+              "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:22.248049Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "awaiting_accept_confirmation",
+            "result": null
+          },
+          "processing_seconds": 2.457,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 184320,
+            "seconds": 8.021,
+            "verification_transcript": "Just to confirm, the offer is balanced, with 30GB of data and 500 call minutes for \u00a328 a month. Would you like me to record your interest for an employee to review?"
+          }
+        },
+        {
+          "utterance": "confirm",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 35,
+              "call_id": 6,
+              "sequence": 8,
+              "role": "customer",
+              "text": "Yes, please record my interest in balanced.",
+              "intent": "confirm_accept",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:31.344327Z",
+              "client_turn_id": "voice-final-1-confirm"
+            },
+            "assistant_turn": {
+              "id": 36,
+              "call_id": 6,
+              "sequence": 9,
+              "role": "assistant",
+              "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+              "intent": null,
+              "fact_keys": [
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:32.781534Z",
+              "client_turn_id": null
+            },
+            "status": "completed",
+            "conversation_state": "closed",
+            "result": {
+              "id": 6,
+              "call_id": 6,
+              "outcome": "accepted",
+              "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+              "next_action": "Employee should review confirmed interest and process the package request.",
+              "follow_up_note": null,
+              "evidence_turn_id": 35,
+              "created_at": "2026-10-09T08:52:32.785261Z"
+            }
+          },
+          "processing_seconds": 2.515,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 119424,
+            "seconds": 2.52,
+            "verification_transcript": "Thanks. I've noted your interest for an employee to review. Your package and bill haven't changed."
+          }
+        }
+      ],
+      "saved_call": {
+        "call_id": 6,
+        "customer_id": 1,
+        "recommendation_id": 1,
+        "status": "completed",
+        "conversation_state": "closed",
+        "offer_snapshot": {
+          "proposed_package": {
+            "id": 3,
+            "name": "Balanced",
+            "monthly_price_minor": 2800,
+            "currency": "AZN",
+            "data_gb": 30.0,
+            "call_minutes": 500,
+            "extra_gb_price_minor": 100,
+            "extra_minute_price_minor": 5,
+            "verified_faq": {
+              "taxes": "The listed monthly price includes fictional taxes.",
+              "contract": "There is no minimum contract.",
+              "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+              "roaming": "Roaming is excluded.",
+              "rollover": "Unused data and minutes do not roll over."
+            },
+            "active": true,
+            "version": 1
+          },
+          "evidence": {
+            "usage": [
+              {
+                "month": "2026-07-01",
+                "data_gb": 25.0,
+                "call_minutes": 180,
+                "extra_charges_minor": 1000
+              },
+              {
+                "month": "2026-08-01",
+                "data_gb": 28.0,
+                "call_minutes": 200,
+                "extra_charges_minor": 1300
+              },
+              {
+                "month": "2026-09-01",
+                "data_gb": 30.0,
+                "call_minutes": 220,
+                "extra_charges_minor": 1500
+              }
+            ],
+            "current_package": {
+              "id": 2,
+              "name": "Everyday",
+              "monthly_price_minor": 2000,
+              "currency": "AZN",
+              "data_gb": 15.0,
+              "call_minutes": 300,
+              "extra_gb_price_minor": 100,
+              "extra_minute_price_minor": 5,
+              "verified_faq": {
+                "taxes": "The listed monthly price includes fictional taxes.",
+                "contract": "There is no minimum contract.",
+                "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+                "roaming": "Roaming is excluded.",
+                "rollover": "Unused data and minutes do not roll over."
+              },
+              "active": true,
+              "version": 1
+            },
+            "peak_data_gb": 30.0,
+            "peak_call_minutes": 220,
+            "months_exceeding_allowance": 3,
+            "average_bill_minor": 3267,
+            "estimated_savings_minor": 467
+          },
+          "reason": "Your data usage exceeded your 15 GB allowance in all three months. Balanced covers your observed usage up to 30 GB and 220 minutes with 30 GB and 500 minutes. It could reduce your historical average monthly bill from 32.67 to 28.00 AZN. Future savings depend on usage.",
+          "algorithm_version": "rules-v1"
+        },
+        "started_at": "2026-10-09T08:52:09.158867Z",
+        "ended_at": "2026-10-09T08:52:32.785261Z",
+        "last_activity_at": "2026-10-09T08:52:32.785261Z",
+        "error_code": null,
+        "turns": [
+          {
+            "id": 28,
+            "call_id": 6,
+            "sequence": 1,
+            "role": "assistant",
+            "text": "Hi, I'm an AI telecom advisor, and this is a simulated call. Is now a good time to talk about a package that could suit your usage?",
+            "intent": null,
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:09.158867Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 29,
+            "call_id": 6,
+            "sequence": 2,
+            "role": "customer",
+            "text": "Yes, please explain the offer.",
+            "intent": "consent",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:12.305558Z",
+            "client_turn_id": "voice-final-1-consent"
+          },
+          {
+            "id": 30,
+            "call_id": 6,
+            "sequence": 3,
+            "role": "assistant",
+            "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 4.67 manats a month, depending on future usage; what would you like to know?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "observed_usage",
+              "estimated_savings"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:13.617240Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 31,
+            "call_id": 6,
+            "sequence": 4,
+            "role": "customer",
+            "text": "Yes, but does it include roaming?",
+            "intent": "package_question",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:17.282378Z",
+            "client_turn_id": "voice-final-1-question"
+          },
+          {
+            "id": 32,
+            "call_id": 6,
+            "sequence": 5,
+            "role": "assistant",
+            "text": "Roaming isn't included.",
+            "intent": null,
+            "fact_keys": [
+              "roaming"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:18.470718Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 33,
+            "call_id": 6,
+            "sequence": 6,
+            "role": "customer",
+            "text": "I would like to take balanced.",
+            "intent": "accept_interest",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:20.649744Z",
+            "client_turn_id": "voice-final-1-interest"
+          },
+          {
+            "id": 34,
+            "call_id": 6,
+            "sequence": 7,
+            "role": "assistant",
+            "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:22.248049Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 35,
+            "call_id": 6,
+            "sequence": 8,
+            "role": "customer",
+            "text": "Yes, please record my interest in balanced.",
+            "intent": "confirm_accept",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:31.344327Z",
+            "client_turn_id": "voice-final-1-confirm"
+          },
+          {
+            "id": 36,
+            "call_id": 6,
+            "sequence": 9,
+            "role": "assistant",
+            "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+            "intent": null,
+            "fact_keys": [
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:32.781534Z",
+            "client_turn_id": null
+          }
+        ],
+        "result": {
+          "id": 6,
+          "call_id": 6,
+          "outcome": "accepted",
+          "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+          "next_action": "Employee should review confirmed interest and process the package request.",
+          "follow_up_note": null,
+          "evidence_turn_id": 35,
+          "created_at": "2026-10-09T08:52:32.785261Z"
+        }
+      }
+    },
+    {
+      "call_id": 7,
+      "recommendation_id": 3,
+      "turns": [
+        {
+          "utterance": "consent",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 38,
+              "call_id": 7,
+              "sequence": 2,
+              "role": "customer",
+              "text": "Yes, please explain the offer.",
+              "intent": "consent",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:36.306903Z",
+              "client_turn_id": "voice-final-2-consent"
+            },
+            "assistant_turn": {
+              "id": 39,
+              "call_id": 7,
+              "sequence": 3,
+              "role": "assistant",
+              "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 2 manats a month, depending on future usage; what would you like to know?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "observed_usage",
+                "estimated_savings"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:37.611972Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 2.273,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 236928,
+            "seconds": 6.4,
+            "verification_transcript": "Sure, I'd suggest Balanced with 30GB of data and 500 call minutes for 28 manat a month. Based on your recent bills, you could save about 2 manat a month, depending on future usage. What would you like to know?"
+          }
+        },
+        {
+          "utterance": "question",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 40,
+              "call_id": 7,
+              "sequence": 4,
+              "role": "customer",
+              "text": "Yes, but does it include roaming?",
+              "intent": "package_question",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:44.818302Z",
+              "client_turn_id": "voice-final-2-question"
+            },
+            "assistant_turn": {
+              "id": 41,
+              "call_id": 7,
+              "sequence": 5,
+              "role": "assistant",
+              "text": "Roaming isn't included.",
+              "intent": null,
+              "fact_keys": [
+                "roaming"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:46.177602Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "offer_discussion",
+            "result": null
+          },
+          "processing_seconds": 2.161,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 41088,
+            "seconds": 1.63,
+            "verification_transcript": "Roaming isn't included."
+          }
+        },
+        {
+          "utterance": "interest",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 42,
+              "call_id": 7,
+              "sequence": 6,
+              "role": "customer",
+              "text": "I would like to take balanced.",
+              "intent": "accept_interest",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:48.676171Z",
+              "client_turn_id": "voice-final-2-interest"
+            },
+            "assistant_turn": {
+              "id": 43,
+              "call_id": 7,
+              "sequence": 7,
+              "role": "assistant",
+              "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+              "intent": null,
+              "fact_keys": [
+                "price",
+                "data_allowance",
+                "call_allowance",
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:52:50.086896Z",
+              "client_turn_id": null
+            },
+            "status": "active",
+            "conversation_state": "awaiting_accept_confirmation",
+            "result": null
+          },
+          "processing_seconds": 2.282,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 188928,
+            "seconds": 12.894,
+            "verification_transcript": "Just to confirm, the offer is balanced with 30GB of data and 500 call minutes for \u00a328 a month. Would you like me to record your interest for an employee to review?"
+          }
+        },
+        {
+          "utterance": "confirm",
+          "status_code": 200,
+          "response": {
+            "customer_turn": {
+              "id": 44,
+              "call_id": 7,
+              "sequence": 8,
+              "role": "customer",
+              "text": "Yes, please record my interest in balanced.",
+              "intent": "confirm_accept",
+              "fact_keys": [],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:53:04.112497Z",
+              "client_turn_id": "voice-final-2-confirm"
+            },
+            "assistant_turn": {
+              "id": 45,
+              "call_id": 7,
+              "sequence": 9,
+              "role": "assistant",
+              "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+              "intent": null,
+              "fact_keys": [
+                "activation"
+              ],
+              "interrupted": false,
+              "created_at": "2026-10-09T08:53:05.378857Z",
+              "client_turn_id": null
+            },
+            "status": "completed",
+            "conversation_state": "closed",
+            "result": {
+              "id": 7,
+              "call_id": 7,
+              "outcome": "accepted",
+              "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+              "next_action": "Employee should review confirmed interest and process the package request.",
+              "follow_up_note": null,
+              "evidence_turn_id": 44,
+              "created_at": "2026-10-09T08:53:05.380320Z"
+            }
+          },
+          "processing_seconds": 2.389,
+          "speech": {
+            "status_code": 200,
+            "content_type": "audio/mpeg",
+            "bytes": 100224,
+            "seconds": 1.847,
+            "verification_transcript": "Thanks. I've noted your interest for an employee to review. Your package and bill haven't changed."
+          }
+        }
+      ],
+      "saved_call": {
+        "call_id": 7,
+        "customer_id": 3,
+        "recommendation_id": 3,
+        "status": "completed",
+        "conversation_state": "closed",
+        "offer_snapshot": {
+          "proposed_package": {
+            "id": 3,
+            "name": "Balanced",
+            "monthly_price_minor": 2800,
+            "currency": "AZN",
+            "data_gb": 30.0,
+            "call_minutes": 500,
+            "extra_gb_price_minor": 100,
+            "extra_minute_price_minor": 5,
+            "verified_faq": {
+              "taxes": "The listed monthly price includes fictional taxes.",
+              "contract": "There is no minimum contract.",
+              "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+              "roaming": "Roaming is excluded.",
+              "rollover": "Unused data and minutes do not roll over."
+            },
+            "active": true,
+            "version": 1
+          },
+          "evidence": {
+            "usage": [
+              {
+                "month": "2026-07-01",
+                "data_gb": 12.0,
+                "call_minutes": 500,
+                "extra_charges_minor": 1000
+              },
+              {
+                "month": "2026-08-01",
+                "data_gb": 14.0,
+                "call_minutes": 500,
+                "extra_charges_minor": 1000
+              },
+              {
+                "month": "2026-09-01",
+                "data_gb": 15.0,
+                "call_minutes": 500,
+                "extra_charges_minor": 1000
+              }
+            ],
+            "current_package": {
+              "id": 2,
+              "name": "Everyday",
+              "monthly_price_minor": 2000,
+              "currency": "AZN",
+              "data_gb": 15.0,
+              "call_minutes": 300,
+              "extra_gb_price_minor": 100,
+              "extra_minute_price_minor": 5,
+              "verified_faq": {
+                "taxes": "The listed monthly price includes fictional taxes.",
+                "contract": "There is no minimum contract.",
+                "activation": "Activation requires employee processing. This demo records interest and never changes a package or bill.",
+                "roaming": "Roaming is excluded.",
+                "rollover": "Unused data and minutes do not roll over."
+              },
+              "active": true,
+              "version": 1
+            },
+            "peak_data_gb": 15.0,
+            "peak_call_minutes": 500,
+            "months_exceeding_allowance": 3,
+            "average_bill_minor": 3000,
+            "estimated_savings_minor": 200
+          },
+          "reason": "Your call usage exceeded your 300 minute allowance in all three months. Balanced covers your observed usage up to 15 GB and 500 minutes with 30 GB and 500 minutes. It could reduce your historical average monthly bill from 30.00 to 28.00 AZN. Future savings depend on usage.",
+          "algorithm_version": "rules-v1"
+        },
+        "started_at": "2026-10-09T08:52:35.340550Z",
+        "ended_at": "2026-10-09T08:53:05.380320Z",
+        "last_activity_at": "2026-10-09T08:53:05.380320Z",
+        "error_code": null,
+        "turns": [
+          {
+            "id": 37,
+            "call_id": 7,
+            "sequence": 1,
+            "role": "assistant",
+            "text": "Hi, I'm an AI telecom advisor, and this is a simulated call. Is now a good time to talk about a package that could suit your usage?",
+            "intent": null,
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:35.340550Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 38,
+            "call_id": 7,
+            "sequence": 2,
+            "role": "customer",
+            "text": "Yes, please explain the offer.",
+            "intent": "consent",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:36.306903Z",
+            "client_turn_id": "voice-final-2-consent"
+          },
+          {
+            "id": 39,
+            "call_id": 7,
+            "sequence": 3,
+            "role": "assistant",
+            "text": "Sure, I'd suggest Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Based on your recent bills, you could save about 2 manats a month, depending on future usage; what would you like to know?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "observed_usage",
+              "estimated_savings"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:37.611972Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 40,
+            "call_id": 7,
+            "sequence": 4,
+            "role": "customer",
+            "text": "Yes, but does it include roaming?",
+            "intent": "package_question",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:44.818302Z",
+            "client_turn_id": "voice-final-2-question"
+          },
+          {
+            "id": 41,
+            "call_id": 7,
+            "sequence": 5,
+            "role": "assistant",
+            "text": "Roaming isn't included.",
+            "intent": null,
+            "fact_keys": [
+              "roaming"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:46.177602Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 42,
+            "call_id": 7,
+            "sequence": 6,
+            "role": "customer",
+            "text": "I would like to take balanced.",
+            "intent": "accept_interest",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:48.676171Z",
+            "client_turn_id": "voice-final-2-interest"
+          },
+          {
+            "id": 43,
+            "call_id": 7,
+            "sequence": 7,
+            "role": "assistant",
+            "text": "Just to confirm, the offer is Balanced, with 30 gigabytes of data and 500 call minutes for 28 manats a month. Would you like me to record your interest for an employee to review?",
+            "intent": null,
+            "fact_keys": [
+              "price",
+              "data_allowance",
+              "call_allowance",
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:52:50.086896Z",
+            "client_turn_id": null
+          },
+          {
+            "id": 44,
+            "call_id": 7,
+            "sequence": 8,
+            "role": "customer",
+            "text": "Yes, please record my interest in balanced.",
+            "intent": "confirm_accept",
+            "fact_keys": [],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:53:04.112497Z",
+            "client_turn_id": "voice-final-2-confirm"
+          },
+          {
+            "id": 45,
+            "call_id": 7,
+            "sequence": 9,
+            "role": "assistant",
+            "text": "Thanks, I've noted your interest for an employee to review. Your package and bill haven't changed.",
+            "intent": null,
+            "fact_keys": [
+              "activation"
+            ],
+            "interrupted": false,
+            "created_at": "2026-10-09T08:53:05.378857Z",
+            "client_turn_id": null
+          }
+        ],
+        "result": {
+          "id": 7,
+          "call_id": 7,
+          "outcome": "accepted",
+          "summary": "Customer explicitly confirmed interest in Balanced for employee processing. Package and billing remain unchanged.",
+          "next_action": "Employee should review confirmed interest and process the package request.",
+          "follow_up_note": null,
+          "evidence_turn_id": 44,
+          "created_at": "2026-10-09T08:53:05.380320Z"
+        }
+      }
+    }
+  ],
+  "initial_issue": "Second initial round returned only 0.36 seconds of MP3 for the closing sentence. The new duration guard rejects this fixture as incomplete_speech_audio before caching.",
+  "models": {
+    "intent": "gpt-4.1-mini",
+    "stt": "gpt-4o-mini-transcribe",
+    "tts": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  "speech_instructions_sha256": "facbfd928f2129d1d350575976c840ce8713e8b743a9d1f6c4f9b3315ea83fab"
+}
