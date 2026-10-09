@@ -10,6 +10,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from backend.audio import AudioInput, SpeechCache
+from backend.config import Settings
 from backend.conversation import INTRODUCTION, UNRESOLVED_CLOSING, render_reply, result_summary
 from backend.database import utc_now
 from backend.enums import (
@@ -48,10 +49,6 @@ from backend.serialization import (
     recommendation_response,
     turn_response,
 )
-
-MAX_CUSTOMER_TURNS = 10
-SESSION_LIMIT = timedelta(minutes=5)
-IDLE_LIMIT = timedelta(minutes=2)
 
 
 def require_call(session: Session, call_id: int) -> Call:
@@ -121,13 +118,16 @@ def save_result(
     session.flush()
 
 
-def expire_calls(session: Session) -> None:
+def expire_calls(session: Session, settings: Settings, processing: set[int]) -> None:
     now = utc_now()
     for call in session.scalars(select(Call).where(Call.status == CallStatus.ACTIVE)).all():
+        # A provider await must not turn an accepted message into a lost response.
+        if call.id in processing:
+            continue
         reason = None
-        if now - call.started_at >= SESSION_LIMIT:
+        if now - call.started_at >= timedelta(seconds=settings.call_session_timeout_seconds):
             reason = "session_timeout"
-        elif now - call.last_activity_at >= IDLE_LIMIT:
+        elif now - call.last_activity_at >= timedelta(seconds=settings.call_idle_timeout_seconds):
             reason = "inactivity_timeout"
         if reason:
             # No synthetic customer decision or evidence is created for expiry.
@@ -147,7 +147,7 @@ class CallWorkflow:
     async def expire(self) -> None:
         async with self.lock:
             with self.sessions.begin() as session:
-                expire_calls(session)
+                expire_calls(session, self.provider.settings, self.processing)
 
     def _offer_records(self, session: Session, recommendation_id: int):
         recommendation = session.get(Recommendation, recommendation_id)
@@ -304,7 +304,9 @@ class CallWorkflow:
     async def read(self, call_id: int) -> CallResponse:
         async with self.lock:
             with self.sessions() as session:
-                return call_response(session, require_call(session, call_id))
+                return call_response(
+                    session, require_call(session, call_id), self.provider.settings
+                )
 
     async def end(self, call_id: int, body: EndCallRequest) -> CallResponse:
         async with self.lock:
@@ -312,7 +314,31 @@ class CallWorkflow:
                 call = require_call(session, call_id)
                 mark_interrupted(session, call, body.interrupted_assistant_turn_id)
                 save_result(session, call, Outcome.UNRESOLVED, reason="manual_end")
-                return call_response(session, call)
+                return call_response(session, call, self.provider.settings)
+
+    async def approve_package_change(self, call_id: int, body: ApproveRequest) -> CallResponse:
+        async with self.lock:
+            with self.sessions.begin() as session:
+                call = require_call(session, call_id)
+                result = session.scalar(select(CallResult).where(CallResult.call_id == call.id))
+                if call.status == CallStatus.ACTIVE or result is None:
+                    raise AppError(
+                        "call_not_closed", "End the conversation before reviewing interest.", 409
+                    )
+                if result.outcome != Outcome.ACCEPTED:
+                    raise AppError(
+                        "interest_not_confirmed",
+                        "Only confirmed customer interest can be approved.",
+                        409,
+                    )
+                if result.package_approved_at is None:
+                    result.package_approved_at = utc_now()
+                    result.package_approved_by = body.approved_by
+                    result.next_action = (
+                        "Employee approved the customer's package request for processing. "
+                        "Service activation still requires the telecom billing system."
+                    )
+                return call_response(session, call, self.provider.settings)
 
     async def delete(self, call_id: int) -> None:
         async with self.lock:
@@ -563,10 +589,10 @@ class CallWorkflow:
                         save_result(
                             session, call, reply.outcome, customer_turn, reply.follow_up_note
                         )
-                    elif count >= MAX_CUSTOMER_TURNS:
+                    elif count >= self.provider.settings.call_max_customer_turns:
                         assistant.text += " " + UNRESOLVED_CLOSING
                         save_result(session, call, Outcome.UNRESOLVED, reason="turn_limit")
-                    full_call = call_response(session, call)
+                    full_call = call_response(session, call, self.provider.settings)
                     response = TurnResponse(
                         customer_turn=turn_response(customer_turn),
                         assistant_turn=turn_response(assistant),
@@ -579,10 +605,13 @@ class CallWorkflow:
         except AppError as exc:
             async with self.lock:
                 with self.sessions.begin() as session:
-                    expire_calls(session)
+                    # The processing guard still protects this call; failures refresh activity
+                    # so the saved message has a full idle window in which to be retried.
+                    expire_calls(session, self.provider.settings, self.processing)
                     call = require_call(session, call_id)
                     if call.status == CallStatus.ACTIVE:
                         call.error_code = exc.code
+                        call.last_activity_at = utc_now()
             raise
         finally:
             self.processing.discard(call_id)

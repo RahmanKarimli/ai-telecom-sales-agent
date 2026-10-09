@@ -140,6 +140,14 @@ async def delete_call(call_id: ResourceID, request: Request) -> None:
     await request.app.state.workflow.delete(call_id)
 
 
+@router.post("/calls/{call_id}/approve-package-change", response_model=CallResponse, tags=["Calls"])
+async def approve_package_change(
+    call_id: ResourceID, body: ApproveRequest, request: Request
+) -> CallResponse:
+    """Record employee approval of a customer's confirmed package interest for processing."""
+    return await request.app.state.workflow.approve_package_change(call_id, body)
+
+
 @router.post(
     "/calls/{call_id}/turns",
     response_model=TurnResponse,

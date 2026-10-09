@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     openai_tts_model: str = "gpt-4o-mini-tts"
     openai_tts_voice: str = "alloy"
     openai_timeout_seconds: float = Field(default=30, gt=0, le=120)
+    call_max_customer_turns: int = Field(default=50, ge=1, le=200)
+    call_session_timeout_seconds: int = Field(default=1800, ge=1, le=86400)
+    call_idle_timeout_seconds: int = Field(default=600, ge=1, le=86400)
     cors_origins: list[str] = Field(default_factory=list)
     static_dir: Path = Path("frontend/dist")
 
