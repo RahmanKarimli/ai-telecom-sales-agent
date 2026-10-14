@@ -25,7 +25,7 @@ class Provider:
         self.during_request = None
         self.decision = None
 
-    async def extract_decision(self, *_args):
+    async def extract_decision(self, *_args, **_kwargs):
         if self.during_request:
             await self.during_request()
         if self.decision:
@@ -67,17 +67,25 @@ class CallIntegrationTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_more_than_ten_questions_continue_and_duplicate_does_not_count_twice(self):
         for index in range(12):
-            response = await self.workflow.turn(self.call.call_id, f"turn_{index}", "price?", None)
+            response = await self.workflow.turn(
+                self.call.call_id, f"turn_{index}", "price?", None, visitor_ip="127.0.0.1"
+            )
             self.assertEqual(response.status, CallStatus.ACTIVE)
-        await self.workflow.turn(self.call.call_id, "turn_11", "price?", None)
+        await self.workflow.turn(
+            self.call.call_id, "turn_11", "price?", None, visitor_ip="127.0.0.1"
+        )
         saved = await self.workflow.read(self.call.call_id)
         self.assertEqual(len(saved.turns), 25)
         self.assertEqual(saved.limits.max_customer_turns, 50)
 
     async def test_configured_turn_cap_still_closes_unresolved(self):
         self.settings.call_max_customer_turns = 2
-        await self.workflow.turn(self.call.call_id, "turn_1", "price?", None)
-        response = await self.workflow.turn(self.call.call_id, "turn_2", "price?", None)
+        await self.workflow.turn(
+            self.call.call_id, "turn_1", "price?", None, visitor_ip="127.0.0.1"
+        )
+        response = await self.workflow.turn(
+            self.call.call_id, "turn_2", "price?", None, visitor_ip="127.0.0.1"
+        )
         self.assertEqual(response.status, CallStatus.UNRESOLVED)
         self.assertEqual((await self.workflow.read(self.call.call_id)).error_code, "turn_limit")
 
@@ -97,7 +105,9 @@ class CallIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 evidence_quote=text,
                 follow_up_note=None,
             )
-            response = await self.workflow.turn(self.call.call_id, f"confirm_{index}", text, None)
+            response = await self.workflow.turn(
+                self.call.call_id, f"confirm_{index}", text, None, visitor_ip="127.0.0.1"
+            )
             if index < 2:
                 self.assertEqual(response.status, CallStatus.ACTIVE)
                 self.assertIsNone(response.result)
@@ -142,7 +152,9 @@ class CallIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 )
 
         self.provider.during_request = during_request
-        response = await self.workflow.turn(self.call.call_id, "slow_turn", "price?", None)
+        response = await self.workflow.turn(
+            self.call.call_id, "slow_turn", "price?", None, visitor_ip="127.0.0.1"
+        )
         self.assertEqual(response.status, CallStatus.ACTIVE)
         self.assertIsNotNone(response.assistant_turn)
 
@@ -155,11 +167,15 @@ class CallIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.provider.during_request = fail
         with patch("backend.workflow.utc_now", return_value=later):
             with self.assertRaises(AppError):
-                await self.workflow.turn(self.call.call_id, "retry_me", "price?", None)
+                await self.workflow.turn(
+                    self.call.call_id, "retry_me", "price?", None, visitor_ip="127.0.0.1"
+                )
         saved = await self.workflow.read(self.call.call_id)
         self.assertEqual(saved.last_activity_at, later)
         self.provider.during_request = None
-        await self.workflow.turn(self.call.call_id, "retry_me", "price?", None)
+        await self.workflow.turn(
+            self.call.call_id, "retry_me", "price?", None, visitor_ip="127.0.0.1"
+        )
         self.assertEqual(len((await self.workflow.read(self.call.call_id)).turns), 3)
 
     async def test_delete_closed_call_resets_approval_and_allows_new_chat(self):

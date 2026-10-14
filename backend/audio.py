@@ -211,7 +211,7 @@ class SpeechCache:
             if key[0] == call_id:
                 self.discard(key)
 
-    async def get(self, key: tuple[int, str], verified_text: str) -> bytes:
+    async def get(self, key: tuple[int, str], verified_text: str, *, visitor_ip: str) -> bytes:
         async with self.lock:
             entry = self.entries.get(key)
             if entry is not None:
@@ -223,7 +223,9 @@ class SpeechCache:
                 else:
                     self.entries.move_to_end(key)
                     return data
-            data = await self.provider.synthesize_verified_text(verified_text)
+            data = await self.provider.synthesize_verified_text(
+                verified_text, visitor_ip=visitor_ip
+            )
             if len(data) > MAX_SPEECH_BYTES:
                 raise AppError(
                     "speech_too_large", "Generated speech was too large. Use the saved text.", 502

@@ -251,6 +251,37 @@ docker run --rm --env-file .env -e APP_ENV=production -e HOST=0.0.0.0 -p 8000:80
 
 Set a nonempty `DEMO_ACCESS_TOKEN` in `.env` before starting the production container.
 
+### OpenAI demo usage limits
+
+`OPENAI_MAX_CALLS_TOTAL` defaults to **100** outbound OpenAI calls for the entire app run.
+`OPENAI_MAX_CALLS_PER_VISITOR` defaults to **7** calls per client IP for that run.
+Set these environment variables in Render to change the budgets; values must be
+nonnegative integers, and `0` blocks all OpenAI calls. The Blueprint includes both defaults.
+
+The provider atomically checks and increments both in-memory counters immediately before
+each OpenAI operation. Text interpretation, transcription, and speech generation each cost
+one slot: a recorded turn plus its generated spoken reply normally uses three slots.
+Initial introduction speech also uses a slot. Failed outbound attempts keep their slot;
+the SDK has automatic retries disabled. Cached speech and completed-turn retries make no
+new OpenAI call and consume no slot. If transcription uses the last slot, interpretation
+is blocked and the saved transcript remains available through the existing retry flow.
+
+When either budget is exhausted, AI endpoints return HTTP **429** with error code
+`demo_usage_limit` and the message **“This demo has reached its usage limit. Please try
+again later.”** The existing browser error display shows this message for both turn and
+speech requests. Reading saved calls, browsing recommendations, and ending calls remain
+available.
+
+Visitor identity uses Render's forwarded client IP, preferring `CF-Connecting-IP` from its
+Cloudflare edge, then the first `X-Forwarded-For` address, then the connection IP. IPs are
+validated and normalized; unavailable identities share an `unknown` bucket. These headers
+are trusted for this deployment behind Render's public edge. See
+[Render's client-IP guidance](https://render.com/articles/how-render-handles-ddos-attacks#reading-the-true-client-ip)
+and [Cloudflare's client-IP headers](https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-connecting-ip).
+Visitors sharing an IP share the visitor budget. Counters are never persisted and reset
+at service restart. Keep the existing **one worker / one instance** deployment so this
+in-memory budget covers the entire service.
+
 ## Frontend integration
 
 The ZIP is extracted under `frontend/`. Live FastAPI integration is the default;

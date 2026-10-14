@@ -29,6 +29,7 @@ from backend.schemas import (
     StartCallResponse,
     TurnResponse,
 )
+from backend.usage import client_ip
 
 bearer = HTTPBearer(auto_error=False, description="Shared demo access token; never an OpenAI key.")
 
@@ -63,6 +64,7 @@ router = APIRouter(
         413: {"model": ErrorResponse},
         415: {"model": ErrorResponse},
         422: {"model": ErrorResponse},
+        429: {"model": ErrorResponse},
         502: {"model": ErrorResponse},
         503: {"model": ErrorResponse},
         504: {"model": ErrorResponse},
@@ -176,7 +178,12 @@ async def turn(
         raise AppError("invalid_turn_input", "Supply exactly one of text or audio.", 422)
     audio_input = await read_audio(audio) if audio is not None else None
     return await request.app.state.workflow.turn(
-        call_id, client_turn_id, text, interrupted_assistant_turn_id, audio_input
+        call_id,
+        client_turn_id,
+        text,
+        interrupted_assistant_turn_id,
+        audio_input,
+        visitor_ip=client_ip(request),
     )
 
 
@@ -190,7 +197,7 @@ async def turn(
 )
 async def turn_audio(call_id: ResourceID, turn_id: ResourceID, request: Request) -> Response:
     """Phase 4: generate/cache speech for a saved, verified assistant turn only."""
-    data = await request.app.state.workflow.audio(call_id, turn_id)
+    data = await request.app.state.workflow.audio(call_id, turn_id, visitor_ip=client_ip(request))
     return Response(
         data,
         media_type="audio/mpeg",
