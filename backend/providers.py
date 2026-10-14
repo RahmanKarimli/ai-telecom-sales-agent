@@ -11,6 +11,7 @@ from backend.config import Settings
 from backend.enums import ConversationState, Intent
 from backend.errors import AppError
 from backend.schemas import ConversationDecision, OfferSnapshot
+from backend.usage import OpenAIUsageLimiter
 
 T = TypeVar("T")
 
@@ -88,6 +89,9 @@ class OpenAIProvider:
     def __init__(self, settings: Settings):
         self.settings = settings
         self._client: AsyncOpenAI | None = None
+        self.usage = OpenAIUsageLimiter(
+            settings.openai_max_calls_total, settings.openai_max_calls_per_visitor
+        )
 
     @property
     def speech_instructions(self) -> str:
@@ -111,8 +115,12 @@ class OpenAIProvider:
             await self._client.close()
 
     async def _request(
-        self, operation: Callable[[], Awaitable[T]], *, audio_input: bool = False
+        self, operation: Callable[[], Awaitable[T]], *, visitor_ip: str, audio_input: bool = False
     ) -> T:
+        # Validate configuration before consuming a slot. SDK retries are disabled,
+        # so each reserved operation makes at most one outbound OpenAI request.
+        self._get_client()
+        self.usage.reserve(visitor_ip)
         try:
             return await operation()
         except APITimeoutError as exc:
@@ -143,6 +151,8 @@ class OpenAIProvider:
         state: ConversationState,
         offer: OfferSnapshot,
         history: list[dict[str, str]],
+        *,
+        visitor_ip: str,
     ) -> ConversationDecision:
         if state == ConversationState.CLOSED:
             raise AppError("call_closed", "This conversation is already closed.", 409)
@@ -165,7 +175,8 @@ class OpenAIProvider:
                 text_format=ConversationDecision,
                 max_output_tokens=700,
                 store=False,
-            )
+            ),
+            visitor_ip=visitor_ip,
         )
         decision = response.output_parsed
         if response.status != "completed" or decision is None:
@@ -196,7 +207,9 @@ class OpenAIProvider:
             raise AppError("invalid_ai_output", "Acceptance requires the confirmation state.", 502)
         return decision
 
-    async def transcribe(self, audio: bytes, filename: str, content_type: str) -> str:
+    async def transcribe(
+        self, audio: bytes, filename: str, content_type: str, *, visitor_ip: str
+    ) -> str:
         if not audio:
             raise AppError("empty_audio", "Record another utterance or use typed input.")
         response = await self._request(
@@ -207,13 +220,14 @@ class OpenAIProvider:
                 response_format="json",
             ),
             audio_input=True,
+            visitor_ip=visitor_ip,
         )
         text = response.text.strip()
         if not text:
             raise AppError("empty_transcript", "No speech recognized. Try typed input.", 422)
         return text
 
-    async def synthesize_verified_text(self, verified_text: str) -> bytes:
+    async def synthesize_verified_text(self, verified_text: str, *, visitor_ip: str) -> bytes:
         """Only call with a saved assistant turn rendered by backend fact templates."""
         if not verified_text.strip():
             raise AppError("empty_speech", "There is no assistant text to speak.")
@@ -225,7 +239,8 @@ class OpenAIProvider:
                 input=verified_text,
                 response_format="mp3",
                 **delivery,
-            )
+            ),
+            visitor_ip=visitor_ip,
         )
         if not response.content:
             raise AppError("empty_speech", "AI returned no speech audio. Please retry.", 502)

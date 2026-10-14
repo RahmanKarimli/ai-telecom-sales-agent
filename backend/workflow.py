@@ -383,11 +383,11 @@ class CallWorkflow:
         key = (call_id, hashlib.sha256(fingerprint.encode()).hexdigest())
         return key, turn.text
 
-    async def audio(self, call_id: int, turn_id: int) -> bytes:
+    async def audio(self, call_id: int, turn_id: int, *, visitor_ip: str) -> bytes:
         async with self.lock:
             with self.sessions() as session:
                 key, verified_text = self._speech_source(session, call_id, turn_id)
-        data = await self.speech_cache.get(key, verified_text)
+        data = await self.speech_cache.get(key, verified_text, visitor_ip=visitor_ip)
         # A call may be deleted while TTS is running; never serve audio for a reused ID.
         async with self.lock:
             try:
@@ -407,6 +407,8 @@ class CallWorkflow:
         text: str | None,
         interrupted_turn_id: int | None,
         audio: AudioInput | None = None,
+        *,
+        visitor_ip: str,
     ) -> TurnResponse:
         transcript = text.strip() if text is not None else None
         if audio is None and not transcript:
@@ -490,7 +492,7 @@ class CallWorkflow:
         try:
             if transcript is None:
                 transcript = await self.provider.transcribe(
-                    audio.data, audio.filename, audio.content_type
+                    audio.data, audio.filename, audio.content_type, visitor_ip=visitor_ip
                 )
                 # Release uploaded bytes before the next provider request.
                 audio_digest = audio.sha256
@@ -551,7 +553,9 @@ class CallWorkflow:
                         ).all()
                         if turn.id != customer_turn_id
                     ]
-            decision = await self.provider.extract_decision(transcript, state, offer, history)
+            decision = await self.provider.extract_decision(
+                transcript, state, offer, history, visitor_ip=visitor_ip
+            )
             reply = render_reply(state, offer, decision, transcript)
             # Commit expiry separately so a subsequent call_closed error cannot roll it back.
             await self.expire()
